@@ -1,15 +1,29 @@
 package streamline
-
+import scala.xml._
 
 trait Line
 
 // line doesn't need to be its own class, this is for lyric page type
 
+class StaticPageLine (val lineText: String) extends Line
 
-class SfLine (val lineText: String){
+class LyricPageLine (lineText:String,
+                     val highlights:Node) extends StaticPageLine (lineText){
   
-  val matrix = Array.ofDim[String](lineText.length)
+  
+  
+  
+  
 }
+
+
+class CharacterHighlight (val character: Int,
+                          val time: Double,
+                          val empty: Boolean){
+  
+  
+}
+
 
 /*      parse each highlight block with Highlights
  *     0     6     11   16
@@ -52,7 +66,12 @@ Empty
 20
 31.833333333333332
 Full
-             
 
- *      
- */
+class SfLine (val lineText: String){
+  
+  val matrix = Array.ofDim[String](lineText.length)
+}
+
+
+* 
+*/
