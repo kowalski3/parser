@@ -1,28 +1,91 @@
 package streamline
 import scala.xml._
+import scala.collection.mutable.ListBuffer
 
-trait Line
 
-// line doesn't need to be its own class, this is for lyric page type
-
-class StaticPageLine (val lineText: String) extends Line
-
-class LyricPageLine (lineText:String,
-                     val highlights:Node) extends StaticPageLine (lineText){
+/**
+ * Line trait
+ */
+trait Line {
   
-  
-  
-  
+  def getLines:String
   
 }
 
 
-class CharacterHighlight (val character: Int,
-                          val time: Double,
-                          val empty: Boolean){
+
+
+/**
+ * Static Page super class 
+ */
+class StaticPageLine (val lineText: String) extends Line {
   
+  def getLines = lineText
+}
+
+
+
+
+
+/**
+ * Lyric page sub class
+ */
+
+class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
+  
+  val characters: ListBuffer[CharHighlight] = ListBuffer()
+    
+  def this(lineText:String, highlights:Node) = {
+    this(lineText)
+    (highlights \\ "Highlight").foreach { Highlight => characters += CharHighlight.createFromNode(Highlight) }
+  }
+  
+  def getCharacters = characters
+  
+  
+  override def getLines = {
+    "\n>>>>>>>NEW LINE>>>>>>>\n\n  "+
+    super.getLines + "\n" +
+    characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString()
+    
+  }
   
 }
+
+
+
+
+/**
+ * Character highlights class for LyricPageLine
+ */
+class CharHighlight (val character: String,
+                     val time: String,
+                     val empty: String){
+  
+  def getCharHighlightVal:String = {
+    
+    "    _____________\n\n"+ 
+    "    " + character + "\n"+
+    "    " + time + "\n" +
+    "    " + empty + "\n"
+  }
+  
+}
+ 
+                     
+//Companion object
+object CharHighlight{
+  def createFromNode(highlight: Node):CharHighlight = {
+       val  character = (highlight \\ "Character").text
+       val time = (highlight \\ "Time").text
+       val charType = (highlight \\ "Type").text
+      
+       
+       new CharHighlight(character, time, charType)
+  }
+}
+  
+
 
 
 /*      parse each highlight block with Highlights

@@ -10,6 +10,7 @@ trait SfPage {
  
 
 
+
 //THIS IS TITLE PAGE
 class BasicPage ( val pageType: String,
                   val startTime: String,
@@ -20,51 +21,64 @@ class BasicPage ( val pageType: String,
   def pageValues:String = {
     //println("Start time " + startTime.length())
     "***********************************" + "\n" +
-    "PageType: " + pageType +  "\n " +
+    "PageType: " + pageType +  "\n" +
     "StartTime: " + startTime + " \n" + 
     "EntTime: " + endTime + " \n"
   }
   
 }
 
+
+
 //THIS IS INSTRUCTION 
 class InstructionPage  ( pageType: String,
                          startTime: String,
                          endTime: String,
-                         val lines: List[String]) extends BasicPage(pageType,startTime,endTime)   {
+                         val lines: List[Line]) extends BasicPage(pageType,startTime,endTime)   {
   
-  def linesToString:String = lines.foldLeft(new StringBuilder) { (sb, s) => sb append s + "\n" }.toString() 
   
   
   override def pageValues:String = {
-    super.pageValues  + " \n" +
-    linesToString
-    
+     super.pageValues  + " \n" +
+     lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.getLines + "\n"}
+
   }
   
   
 }
 
 
-//same as staticpage but has a different Sfline type
+
+
+
+//same as InstructionPage but has a different Sfline type
 class LyricPage  (  pageType: String,
                     startTime: String,
-                    endTime: String,
-                    val lyric:String,
-                    val lines: List[(String,String,String)]) extends BasicPage(pageType,startTime,endTime)   {
+                    endTime: String,                    
+                    lines: List[Line]) extends InstructionPage (pageType,startTime,endTime,lines)   {
   
- def charsToString:String = lines.foldLeft(new StringBuilder) 
-                                 { (sb, s) => sb append  "   __________"  + "\n" +
-                                                         "   " + s._1 + "\n" + 
-                                                         "   " + s._2 + "\n" +
-                                                         "   " + s._3 + "\n" }.toString() 
+  override def pageValues:String = {
+     super.pageValues  + " \n" +
+     lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLines}.toString()
+
+  }
   
-     override def pageValues:String = {
-      super.pageValues  + " \n" +
-      lyric + " \n" +
-      charsToString
-    
-  }                                                    
+ 
+  
+  
+  
+// def charsToString:String = lines.foldLeft(new StringBuilder) 
+//                                 { (sb, s) => sb append  "   __________"  + "\n" +
+//                                                         "   " + s._1 + "\n" + 
+//                                                         "   " + s._2 + "\n" +
+//                                                         "   " + s._3 + "\n" }.toString() 
+//  
+//     override def pageValues:String = {
+//      super.pageValues  + " \n" +
+//      lyric + " \n" +
+//      charsToString
+//    
+//  }                                                    
   
 }
 

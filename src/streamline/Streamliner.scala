@@ -39,13 +39,13 @@ class Streamliner(fileName:String) {
                              return new LyricPage    ( pageType,
                                                        lyricPageValues._1,
                                                        lyricPageValues._2,
-                                                       lyricPageValues._3,
-                                                       lyricPageValues._4)
+                                                       lyricPageValues._3)
       case _ => println("Dont recognise this type") 
     }
     
     //HANDLE THIS BETTER DONT RETURN NULL
     return null
+  
     
   }
 
@@ -55,46 +55,42 @@ class Streamliner(fileName:String) {
    */
   
  def getTitleValues(pageNode: Node):(String,String)= {
- 
    val startTime = (pageNode \\"StartTime").text
-   val endTime = (pageNode \\"EndTime").text  
-   
+   val endTime = (pageNode \\"EndTime").text   
    (startTime, endTime )
  }
 
  
- def getInstructionValues(pageNode:Node):(String,String,List[(String)]) = {
+ 
+ def getInstructionValues(pageNode:Node):(String,String,List[Line]) = {
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text  
-   val instructionLines: ListBuffer[String] = ListBuffer()
+   val instructionLines: ListBuffer[Line] = ListBuffer()
    
-   (pageNode \\ "Line").foreach {  Line => instructionLines += Line.text }
- 
-   (startTime,endTime,instructionLines.toList)
+    (pageNode \\ "Line").foreach { Line => 
+        (Line \\ "Text").foreach  { Text => instructionLines += new StaticPageLine(Text.text) }
+     }
    
+   (startTime,endTime,instructionLines.toList) 
  }
  
  
  
- def getLyricValues(pageNode: Node):(String, String, String, List[(String, String,String)])= {
-   
+ 
+ def getLyricValues(pageNode: Node):(String, String, List[Line])= {
   
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text
-   val lyric = (pageNode \\"Text").text
-   val charPositions : ListBuffer[(String, String,String)] = ListBuffer()
-     
-   (pageNode \\ "Highlight").foreach {  Highlight => charPositions += getHighlightValues(Highlight)}
-    
-       def getHighlightValues(hlNode: Node):(String,String,String) = {
-         val character = (hlNode \\ "Character").text
-         val time = (hlNode \\ "Time").text
-         val charType = (hlNode \\ "Type").text
-         (character,time,charType)
-       }
-          
-   (startTime, endTime, lyric, charPositions.toList)
+   val lyricLines: ListBuffer[Line] = ListBuffer() 
    
+   
+   (pageNode \\ "Line").foreach { Line => val lyric =  (Line \\ "Text").text
+     (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,Highlights) }
+        
+     }
+      
+         
+    (startTime,endTime,lyricLines.toList) 
   }
  
  
@@ -113,27 +109,3 @@ object Test extends App {
   x.foreach { x => println(x.pageValues) }
     
 }
-
-/*
-def printXML = (file \ "Pages").foreach { Pages =>
-   //  println("Pages")
-     (Pages \ "Page").foreach { Page => parse(Page)
-     
-       (Page \ "Paragraphs").foreach { Paragraphs =>  
-       //  println("    <PARAGRAPHS>") 
-         (Paragraphs \ "Block").foreach { Block =>  
-         //  println("      <BLOCK>")
-           (Block \ "Lines").foreach { Lines =>  
-           //  println("      <LINES>")
-             (Lines \ "Line").foreach { Line =>  
-              // println("        <LINE>")
-               (Line \ "Text").foreach { Text => 
-              //  println("           <TEXT>" + Text.text + "</TEXT>")
-               }
-             }
-           }
-         }
-       }
-     }
-   }
-*/
