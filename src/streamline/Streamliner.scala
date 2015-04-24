@@ -8,53 +8,44 @@ import scala.collection.mutable.ListBuffer
  */
 
 class Streamliner(fileName:String) {
-  
-  //val pageList = List(1,2,3)
-  
-  
-  
-  val file = scala.xml.XML.loadFile(fileName) 
-  
+
+ val file = scala.xml.XML.loadFile(fileName) 
   
  def printXML = (file \\ "Page").foreach { Page => parse(Page)}
   
-  
-  def parsePages = (file \\ "Page").foldLeft(List[SfPage]()) { (pages, pageNode) => 
+ def parsePages = (file \\ "Page").foldLeft(List[SfPage]()) { (pages, pageNode) => 
     pages :+ parse(pageNode)
   }
 
 
-  
-  //def printXML = (file \\ "Page").foreach { Page => parse(Page)}
-
-  
+ 
   def parse(node: Node):SfPage = {
-   // println(node.isEmpty)
     val pageType = (node \ "Type").text
    
      pageType match{
       case "Title"       =>  val titleValues = getTitleValues(node)
-//                             return new BasicPage(pageType,
-//                                                  titleValues._1,
-//                                                  titleValues._2
-//                                                  )
+                             return new BasicPage(pageType,
+                                                  titleValues._1,
+                                                  titleValues._2
+                                                  )
                              
       case "Instruction" =>  val instructionPageValues = getInstructionValues(node)
-//                             return new BasicPage(instructionPageValues._1,
-//                                                     instructionPageValues._2,
-//                                                     instructionPageValues._3)
-//                                                     instructionPageValues._4)
+                             return new InstructionPage( pageType, 
+                                                         instructionPageValues._1,
+                                                         instructionPageValues._2,
+                                                         instructionPageValues._3)
       
-      case "Lyrics"      =>  val lyricValues = getLyricValues(node);
-//                             return new BasicPage    (lyricValues._1,
-//                                                     lyricValues._2,
-//                                                     lyricValues._3)
-//                                                     lyricValues._4)
-                       
+      case "Lyrics"      =>  val lyricPageValues = getLyricValues(node);
+                             return new LyricPage    ( pageType,
+                                                       lyricPageValues._1,
+                                                       lyricPageValues._2,
+                                                       lyricPageValues._3,
+                                                       lyricPageValues._4)
       case _ => println("Dont recognise this type") 
     }
     
-    return new BasicPage("1","2","3")
+    //HANDLE THIS BETTER DONT RETURN NULL
+    return null
     
   }
 
@@ -68,26 +59,24 @@ class Streamliner(fileName:String) {
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text  
    
-   (startTime,
-    endTime
-    )
+   (startTime, endTime )
  }
 
  
- def getInstructionValues(pageNode:Node):(String,String,String) = {
+ def getInstructionValues(pageNode:Node):(String,String,List[(String)]) = {
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text  
    val instructionLines: ListBuffer[String] = ListBuffer()
    
    (pageNode \\ "Line").foreach {  Line => instructionLines += Line.text }
-  
+ 
+   (startTime,endTime,instructionLines.toList)
    
-   ("","","")
  }
  
  
  
- def getLyricValues(pageNode: Node):(String,String,String, List[(String, String,String)])= {
+ def getLyricValues(pageNode: Node):(String, String, String, List[(String, String,String)])= {
    
   
    val startTime = (pageNode \\"StartTime").text
@@ -103,8 +92,7 @@ class Streamliner(fileName:String) {
          val charType = (hlNode \\ "Type").text
          (character,time,charType)
        }
-    
-   
+          
    (startTime, endTime, lyric, charPositions.toList)
    
   }
@@ -122,7 +110,7 @@ object Test extends App {
   val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXmlSample1.xml")
   val x = sfParser.parsePages
   
-  //x.foreach { x => println(x.pageValues) }
+  x.foreach { x => println(x.pageValues) }
     
 }
 

@@ -19,21 +19,27 @@ class BasicPage ( val pageType: String,
  
   def pageValues:String = {
     //println("Start time " + startTime.length())
-    return startTime + " \n" + endTime + " \n" + pageType
+    "***********************************" + "\n" +
+    "PageType: " + pageType +  "\n " +
+    "StartTime: " + startTime + " \n" + 
+    "EntTime: " + endTime + " \n"
   }
   
 }
 
-//THIS IS INSTRUCTION AND LYRIC PAGE
-class StandardPage  (  pageType: String,
-                       startTime: String,
-                       endTime: String,
-                       val lines: List[String]) extends BasicPage(pageType,startTime,endTime)   {
+//THIS IS INSTRUCTION 
+class InstructionPage  ( pageType: String,
+                         startTime: String,
+                         endTime: String,
+                         val lines: List[String]) extends BasicPage(pageType,startTime,endTime)   {
+  
+  def linesToString:String = lines.foldLeft(new StringBuilder) { (sb, s) => sb append s + "\n" }.toString() 
+  
   
   override def pageValues:String = {
-    startTime + " \n" +
-    endTime + " \n" +
-    pageType
+    super.pageValues  + " \n" +
+    linesToString
+    
   }
   
   
@@ -47,15 +53,18 @@ class LyricPage  (  pageType: String,
                     val lyric:String,
                     val lines: List[(String,String,String)]) extends BasicPage(pageType,startTime,endTime)   {
   
-//  def this(  startTime:Double,
-//             endtime:Double,
-//             lines:List[Line],
-//             pageType:String) = {
-//    this(???,???,???,???)
-//    
-//  }
-//  
+ def charsToString:String = lines.foldLeft(new StringBuilder) 
+                                 { (sb, s) => sb append  "   __________"  + "\n" +
+                                                         "   " + s._1 + "\n" + 
+                                                         "   " + s._2 + "\n" +
+                                                         "   " + s._3 + "\n" }.toString() 
   
+     override def pageValues:String = {
+      super.pageValues  + " \n" +
+      lyric + " \n" +
+      charsToString
+    
+  }                                                    
   
 }
 
