@@ -46,9 +46,65 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
   override def getLines = {
     "\n>>>>>>>NEW LINE>>>>>>>\n\n  "+
     super.getLines + "\n" +
-    characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString()
-    
+    getLineindexes(lineText).toString() + 
+    println() + 
+    characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString() 
   }
+  
+  
+  
+  
+  def getIndexFromCharacters: List[Int] = {
+    characters.foldLeft(List[Int]()){ (charIndex, char) => charIndex :+ char.character.toInt}
+  }
+  
+  
+  
+  
+ def getLineindexes(str:String): List[(Int,Int)] = {
+  var lengthSoFar = 0
+  val words = str.split(" ")
+  var list = new ListBuffer[(Int,Int)]
+ 
+  for(i <- 0 to words.length-1) {
+    if(i == 0) {
+      list += ( (0, (words(i).length -1)))
+      lengthSoFar += words(i).length + 1
+    } else {
+      list += ( (lengthSoFar, lengthSoFar + (words(i).length -1 ) ))
+      lengthSoFar += words(i).length + 1
+    } 
+   }
+    
+    list.toList
+   }                                               
+
+ 
+ 
+  def getLineindexesWithWord(str:String): List[(String,(Int,Int))] = str.split(" ").toList zip getLineindexes(str)
+  
+  def getLineIndexesAsList(str:String): List[Int] = {
+    var lengthSoFar = 0
+    val words = str.split(" ")
+    var list = new ListBuffer[Int]
+   
+    for(i <- 0 to words.length-1) {
+      if(i == 0) {
+        list += 0
+        list += words(i).length -1
+        lengthSoFar += words(i).length + 1
+      } else {
+        list += lengthSoFar
+        list += lengthSoFar + (words(i).length -1 )
+        lengthSoFar += words(i).length + 1
+      } 
+     }
+      
+      list.toList
+ }        
+
+  
+  
   
 }
 
@@ -64,7 +120,7 @@ class CharHighlight (val character: String,
   
   def getCharHighlightVal:String = {
     
-    "    _____________\n\n"+ 
+    "   \n _____________\n\n"+ 
     "    " + character + "\n"+
     "    " + time + "\n" +
     "    " + empty + "\n"
