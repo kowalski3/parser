@@ -18,8 +18,7 @@ trait Line {
 /**
  * Static Page super class 
  */
-class StaticPageLine (val lineText: String) extends Line {
-  
+class StaticPageLine (val lineText: String) extends Line {  
   def getLines = lineText
 }
 
@@ -40,27 +39,37 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
     (highlights \\ "Highlight").foreach { Highlight => characters += CharHighlight.createFromNode(Highlight) }
   }
   
+  
   def getCharacters = characters
   
   
   override def getLines = {
     "\n>>>>>>>NEW LINE>>>>>>>\n\n  "+
     super.getLines + "\n" +
-    getLineindexes(lineText).toString() + 
-    println() + 
-    characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString() 
+    "LINE OK? " + indexMatch + "\n" + 
+    getIndexFromCharacters.toString() +"\n"+
+    getLineIndexesAsList(lineText).toString() + 
+    println() // + 
+    //characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString() 
   }
   
   
+  def indexMatch: Boolean = {
+    getIndexFromCharacters == getLineIndexesAsList(lineText)
+  }
   
-  
+  /**
+   * Get a time index from list of characters and returns as a list
+   */
   def getIndexFromCharacters: List[Int] = {
     characters.foldLeft(List[Int]()){ (charIndex, char) => charIndex :+ char.character.toInt}
   }
   
   
   
-  
+  /**
+   * Get line indexes methods
+   */
  def getLineindexes(str:String): List[(Int,Int)] = {
   var lengthSoFar = 0
   val words = str.split(" ")
@@ -103,8 +112,6 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
       list.toList
  }        
 
-  
-  
   
 }
 

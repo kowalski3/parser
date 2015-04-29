@@ -43,4 +43,8 @@ characters.foldLeft(List[Int]()){ (sb, s) => sb :+ 1}.toString()
   println(getIndexWithWord(line))                 //> List((Didn't,(0,5)), (know,(7,10)), (what,(12,15)), (time,(17,20)))
   
   //List(1,2,3) zip List (4, 5,6)
+  
+  
+  List(1,2,3) == List(1,2,3)                      //> res1: Boolean = true
+  
 }

@@ -63,22 +63,21 @@ class LyricPage  (  pageType: String,
 
   }
   
- 
-  
-  
-  
-// def charsToString:String = lines.foldLeft(new StringBuilder) 
-//                                 { (sb, s) => sb append  "   __________"  + "\n" +
-//                                                         "   " + s._1 + "\n" + 
-//                                                         "   " + s._2 + "\n" +
-//                                                         "   " + s._3 + "\n" }.toString() 
-//  
-//     override def pageValues:String = {
-//      super.pageValues  + " \n" +
-//      lyric + " \n" +
-//      charsToString
-//    
-//  }                                                    
+ /**
+  * Compares character indexes in XML with index of words in lyric 
+  */
+  def pageLineIndexesOk: Option[Boolean] = {
+    var flag = Option(true) 
+    lines.foreach { lines =>  
+      lines match{
+        case lines: LyricPageLine => if( ! lines.indexMatch) flag = Option(false)
+                                     
+        case _ => return None  
+      } 
+    }
+    flag
+  }
+                                              
   
 }
 

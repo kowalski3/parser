@@ -106,6 +106,21 @@ object Test extends App {
   val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXmlSample1.xml")
   val x = sfParser.parsePages
   
-  x.foreach { x => println(x.pageValues) }
+ // x.foreach { x => println(x.pageValues) }
+  
+  x.foreach { page => 
+     page match {
+       case page: LyricPage =>  
+                                println("PAGE INDEXES OK?")
+                                println(page.pageLineIndexesOk)
+                                //println("*******")
+                                //println(page.pageValues)
+       case _                => println("not lyric page")
+             
+  }
+    
+  
+  }
+  
     
 }
