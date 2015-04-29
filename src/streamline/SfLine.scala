@@ -59,8 +59,8 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
     val wordsAndTime = words zip getTimeFromCharacters
     
     val x = wordsAndTime.foldLeft(new StringBuffer()) { (sb,s) => sb.append(s._1 + "\n" + 
-                                                                            " Start: " + s._2._1 + "\n" + 
-                                                                            " End: " +  s._2._2 + "\n\n") }
+                                                                            " Start: " + s._2(0) + "\n" + 
+                                                                            " End: " +  s._2(1) + "\n\n") }
     
     
     x.toString()
@@ -76,9 +76,9 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
    def getIndexFromCharacters: List[Int] = {
     characters.foldLeft(List[Int]()){ (charIndex, char) => charIndex :+ char.character.toInt}
   }
-   def getTimeFromCharacters: List[(Double,Double)] = {
+   def getTimeFromCharacters: List[ List[Double] ] = {
     val x = characters.foldLeft(List[Double]()){ (charTime, char) => charTime :+ Math.round(char.time.toDouble *100.0)/100.0}
-    x.sliding(2).map(x => (x.head, x.tail.head)).toList
+    x.grouped(2).toList
   }
 
   /**

@@ -108,6 +108,7 @@ object Test extends App {
   
  //trackPages.foreach { x => println(x.pageValues) }
   
+  /*
   //CREATE CONVERTED FILE AND CHECKS IF PAGE INDDEXES OK?
   trackPages.foreach { page => 
      page match {
@@ -118,12 +119,17 @@ object Test extends App {
                                 println(page.pageValues)
        case _                => println("not lyric page")
              
+    }
   }
+  */
   
-     
-     
+  //http://stackoverflow.com/questions/8622364/reading-files-from-a-directory-in-scala
   
+  import scala.collection.JavaConversions._
+  import java.io._
+  println("hi")
+  val myDirectory = new File("C:/Users/Julian.SUNFLYKARAOKE/Desktop/productCreator")
+  for(file <- myDirectory.listFiles if file.getName endsWith ".txt"){
+    println(file)
   }
-  
-    
 }
