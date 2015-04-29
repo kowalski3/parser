@@ -11,7 +11,7 @@ trait SfPage {
 
 
 
-//THIS IS TITLE PAGE
+//TITLE PAGE
 class BasicPage ( val pageType: String,
                   val startTime: String,
                   val endTime: String
@@ -24,34 +24,29 @@ class BasicPage ( val pageType: String,
     "PageType: " + pageType +  "\n" +
     "StartTime: " + startTime + " \n" + 
     "EntTime: " + endTime + " \n"
-  }
-  
+  } 
 }
 
 
 
-//THIS IS INSTRUCTION 
+//THIS IS INSTRUCTION PAGE
 class InstructionPage  ( pageType: String,
                          startTime: String,
                          endTime: String,
                          val lines: List[Line]) extends BasicPage(pageType,startTime,endTime)   {
-  
-  
-  
+   
   override def pageValues:String = {
      super.pageValues  + " \n" +
      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.getLines + "\n"}
-
   }
-  
-  
+   
 }
 
 
 
 
 
-//same as InstructionPage but has a different Sfline type
+//LYRIC PAGE
 class LyricPage  (  pageType: String,
                     startTime: String,
                     endTime: String,                    
@@ -62,6 +57,7 @@ class LyricPage  (  pageType: String,
      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLines}.toString()
 
   }
+  
   
  /**
   * Compares character indexes in XML with index of words in lyric 
@@ -76,8 +72,7 @@ class LyricPage  (  pageType: String,
       } 
     }
     flag
-  }
-                                              
+  }  
   
 }
 

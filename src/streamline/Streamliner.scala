@@ -88,11 +88,9 @@ class Streamliner(fileName:String) {
      (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,Highlights) }
         
      }
-      
-         
+             
     (startTime,endTime,lyricLines.toList) 
   }
- 
  
  
 }
@@ -103,22 +101,27 @@ class Streamliner(fileName:String) {
 
 object Test extends App {
    
-  val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXmlSample1.xml")
-  val x = sfParser.parsePages
+ // val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXmlSample1.xml")
+  val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXMLSampleKBP.xml")
+  val trackPages = sfParser.parsePages
+ // val badIndex List
   
- // x.foreach { x => println(x.pageValues) }
+ //trackPages.foreach { x => println(x.pageValues) }
   
-  x.foreach { page => 
+  //CREATE CONVERTED FILE AND CHECKS IF PAGE INDDEXES OK?
+  trackPages.foreach { page => 
      page match {
        case page: LyricPage =>  
                                 println("PAGE INDEXES OK?")
                                 println(page.pageLineIndexesOk)
-                                //println("*******")
-                                //println(page.pageValues)
+                                println("*******")
+                                println(page.pageValues)
        case _                => println("not lyric page")
              
   }
-    
+  
+     
+     
   
   }
   
