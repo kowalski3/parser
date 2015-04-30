@@ -2,24 +2,63 @@ package streamline
 
 import scala.xml._
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConversions._
+import java.io._
 
 /*
  * https://bcomposes.wordpress.com/2012/05/04/basic-xml-processing-with-scala/
  */
 
-class Streamliner(fileName:String) {
+class Streamliner(directoryName:String) {
 
- val file = scala.xml.XML.loadFile(fileName) 
+ val trackMap = scala.collection.mutable.Map[String,Track]()
+ val sourceDirectory = new File(directoryName)
+
+ //TO DO - make part of constructor
+ def processDirectory = {   
+   for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
+     val key = file.getName.substring(0,file.getName.indexOf(" "))
+     val value = parsePages(file.toString(), file.getPath)
+     trackMap.put(key, value)
+  }   
   
- def printXML = (file \\ "Page").foreach { Page => parse(Page)}
+ }
   
- def parsePages = (file \\ "Page").foldLeft(List[SfPage]()) { (pages, pageNode) => 
-    pages :+ parse(pageNode)
-  }
-
-
+ /**
+  * Checks if indexes of characters in XML match the spacing of the lines in each lyric line
+  * @returns a list of tracks that fail this test
+  */
+ def getBrokenTracks:List[Track] = {
+   val brokenTracks: ListBuffer[Track] = ListBuffer() 
+   
+   for ((key, value) <- trackMap) {
+     val trackOk = value.lyricPagesOk
  
-  def parse(node: Node):SfPage = {
+     trackOk match {
+       case Some(false) => println(key.toString() + " has errors")
+                           brokenTracks.add(value)
+       case Some(true) =>  println(key.toString() + " is error-free")
+       case None =>
+     }
+   }
+   
+   brokenTracks.toList
+ }
+ 
+ 
+ 
+  
+ def parsePages(absfileName: String, relFileName:String):Track = { 
+   val file = scala.xml.XML.loadFile(absfileName)
+   
+   val pageList = (file \\ "Page").foldLeft(List[SfPage]()) { (pages, pageNode) => 
+      pages :+ parsePage(pageNode)
+   }  
+   new Track(relFileName,pageList)
+ }
+
+
+  def parsePage(node: Node):SfPage = {
     val pageType = (node \ "Type").text
    
      pageType match{
@@ -76,23 +115,18 @@ class Streamliner(fileName:String) {
  
  
  
- 
  def getLyricValues(pageNode: Node):(String, String, List[Line])= {
-  
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text
    val lyricLines: ListBuffer[Line] = ListBuffer() 
    
    
    (pageNode \\ "Line").foreach { Line => val lyric =  (Line \\ "Text").text
-     (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,Highlights) }
-        
+     (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,Highlights) }     
      }
              
     (startTime,endTime,lyricLines.toList) 
-  }
- 
- 
+  } 
 }
 
 
@@ -101,35 +135,8 @@ class Streamliner(fileName:String) {
 
 object Test extends App {
    
- // val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXmlSample1.xml")
-  val sfParser = new Streamliner("C:/Julian/git/parser/data/sfXMLSampleKBP.xml")
-  val trackPages = sfParser.parsePages
- // val badIndex List
-  
- //trackPages.foreach { x => println(x.pageValues) }
-  
-  /*
-  //CREATE CONVERTED FILE AND CHECKS IF PAGE INDDEXES OK?
-  trackPages.foreach { page => 
-     page match {
-       case page: LyricPage =>  
-                                println("PAGE INDEXES OK?")
-                                println(page.pageLineIndexesOk)
-                                println("*******")
-                                println(page.pageValues)
-       case _                => println("not lyric page")
-             
-    }
-  }
-  */
-  
-  //http://stackoverflow.com/questions/8622364/reading-files-from-a-directory-in-scala
-  
-  import scala.collection.JavaConversions._
-  import java.io._
-  println("hi")
-  val myDirectory = new File("C:/Users/Julian.SUNFLYKARAOKE/Desktop/productCreator")
-  for(file <- myDirectory.listFiles if file.getName endsWith ".txt"){
-    println(file)
-  }
+  val myParser = new Streamliner("C:/Users/Julian.SUNFLYKARAOKE/Desktop/xmlCheck")
+  myParser.processDirectory
+  myParser.getBrokenTracks
+   
 }

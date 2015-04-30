@@ -66,8 +66,7 @@ class LyricPage  (  pageType: String,
     var flag = Option(true) 
     lines.foreach { lines =>  
       lines match{
-        case lines: LyricPageLine => if( ! lines.indexMatch) flag = Option(false)
-                                     
+        case lines: LyricPageLine => if( ! lines.indexMatch) flag = Option(false)                 
         case _ => return None  
       } 
     }

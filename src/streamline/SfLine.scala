@@ -24,12 +24,12 @@ class StaticPageLine (val lineText: String) extends Line   { def getLines = line
  */
 
 class LyricPageLine (lineText:String) extends StaticPageLine (lineText){ 
-  val characters: ListBuffer[CharHighlight] = ListBuffer()
+  val characters: ListBuffer[Character] = ListBuffer()
   
 
   def this(lineText:String, highlights:Node) = {
     this(lineText)
-    (highlights \\ "Highlight").foreach { Highlight => characters += CharHighlight.createFromNode(Highlight) }
+    (highlights \\ "Highlight").foreach { Highlight => characters += Character.createFromNode(Highlight) }
   }
   
 
