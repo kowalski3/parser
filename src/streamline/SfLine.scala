@@ -40,11 +40,12 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
   override def getLines = {
     "\n>>>>>>>NEW LINE>>>>>>>\n\n  "+
     super.getLines + "\n\n" +
-   // "LINE OK? " + indexMatch + "\n" + 
-    addTimesToWords + "\n" 
-    //getIndexFromCharacters.toString() +"\n"+
+    "LINE OK? " + indexMatch + "\n" + 
+    //addTimesToWords + "\n" 
+    //DEBUG
+    getIndexFromCharacters.toString() +"\n"+
     //getTimeFromCharacters.toString() +"\n"+
-    //getLineIndexesAsList(lineText).toString() + 
+    getLineIndexesAsList(lineText).toString() //+ 
     //characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString() 
   }
   

@@ -1,8 +1,7 @@
 package streamline
 import scala.xml._
 
-trait SfPage {
-  
+trait SfPage {  
   def pageValues:String
 
 }

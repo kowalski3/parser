@@ -26,6 +26,15 @@ class Track(fileName:String, pageList: List[SfPage]){
   }
   
   
+  def getTrackData: String = {
+    
+    val str = fileName + "\n" + pageList.foldLeft(new StringBuffer()){ (sb, s) => sb append s.pageValues}.toString()
+    //println(str)
+    str
+  }
+  
+  
+  def getFileName:String = fileName
   
 }
   
