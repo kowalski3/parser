@@ -26,8 +26,6 @@ object Character{
        val  character = (highlight \\ "Character").text
        val time = (highlight \\ "Time").text
        val charType = (highlight \\ "Type").text
-      
-       
        new Character(character, time, charType)
   }
 }

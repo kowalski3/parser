@@ -16,6 +16,7 @@ class Streamliner(srcDirectoryName:String,
  val sourceDirectory = new File(srcDirectoryName)
  val destDirectory = new File(destDirectoryName)
 
+ 
  //TO DO - make part of constructor
  def processDirectory = {   
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
@@ -35,9 +36,8 @@ class Streamliner(srcDirectoryName:String,
    val brokenTracks: ListBuffer[Track] = ListBuffer() 
    
    for ((key, value) <- trackMap) {
-     val trackOk = value.lyricPagesOk
- 
-     trackOk match {
+    
+     value.trackOk match {
        case Some(false) => println(key.toString() + " has errors")
                            brokenTracks.add(value)
        case Some(true) =>  println(key.toString() + " is error-free")
@@ -49,35 +49,39 @@ class Streamliner(srcDirectoryName:String,
  }
  
  
+ 
  /**
   * Saves converted track to file
   */
- def convertedTracksToFile = {
+ def convertedTracksToFile = {  
    
-  
-   for ((key, value) <- trackMap){
+   for ((key, value) <- trackMap){  
+     var fileName = ""
      
-     //write(destDirectoryName + '\' + key.toString(), "")
-     
-     val path = destDirectoryName + "/" + key + ".txt"
+     value.trackOk match {
+       case Some(true) => fileName = key + ".txt"
+       case Some(false) =>  fileName = "ERROR_" + key + ".txt"
+       case None => //throw exception
+     }
+          
+     value.trackOk
+     val path = destDirectoryName + "/" + fileName
      val text = value.getTrackData
-     write(path, text)
-     
-   }
-   
-   def write(path: String, txt: String): Unit = {
+     writeToFile(path, text)
+     println(key + " written to file")
+   }   
+ }
+  
+
+ 
+ def writeToFile(path: String, txt: String): Unit = {
      val pw = new PrintWriter(new File(path ))
      pw.write(txt)
-     pw.close
-     
+     pw.close   
     }
-     
-   
-   
- }
- 
  
   
+ 
  def parsePages(absfileName: String, relFileName:String):Track = { 
    val file = scala.xml.XML.loadFile(absfileName)
    
@@ -88,6 +92,7 @@ class Streamliner(srcDirectoryName:String,
  }
 
 
+ 
   def parsePage(node: Node):SfPage = {
     val pageType = (node \ "Type").text
    
@@ -105,7 +110,7 @@ class Streamliner(srcDirectoryName:String,
                                                          instructionPageValues._3)
       
       case "Lyrics"      =>  val lyricPageValues = getLyricValues(node);
-                             return new LyricPage    ( pageType,
+                             return                    LyricPage( pageType,
                                                        lyricPageValues._1,
                                                        lyricPageValues._2,
                                                        lyricPageValues._3)
@@ -136,8 +141,8 @@ class Streamliner(srcDirectoryName:String,
    val endTime = (pageNode \\"EndTime").text  
    val instructionLines: ListBuffer[Line] = ListBuffer()
    
-    (pageNode \\ "Line").foreach { Line => 
-        (Line \\ "Text").foreach  { Text => instructionLines += new StaticPageLine(Text.text) }
+    (pageNode \\ "Line").foreach { Line =>  val voice =  (Line \\ "Voice").text
+        (Line \\ "Text").foreach  { Text => instructionLines += new StaticPageLine(voice, Text.text) }
      }
    
    (startTime,endTime,instructionLines.toList) 
@@ -149,14 +154,16 @@ class Streamliner(srcDirectoryName:String,
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text
    val lyricLines: ListBuffer[Line] = ListBuffer() 
-   
-   
-   (pageNode \\ "Line").foreach { Line => val lyric =  (Line \\ "Text").text
-     (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,Highlights) }     
+    
+   (pageNode \\ "Line").foreach { Line => val voice =  (Line \\ "Voice").text
+                                          val lyric =  (Line \\ "Text").text
+     (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,voice,Highlights) }     
      }
              
     (startTime,endTime,lyricLines.toList) 
   } 
+ 
+ 
 }
 
 
@@ -164,16 +171,17 @@ class Streamliner(srcDirectoryName:String,
 
 
 object Test extends App {
-   
-  val myParser = new Streamliner("C:/Users/Julian.SUNFLYKARAOKE/Desktop/xmlCheck",
-                                  "C:/Users/Julian.SUNFLYKARAOKE/Desktop/fileOutput"                                                )
-  myParser.processDirectory
+  
+  val src = "C:/Users/Julian.SUNFLYKARAOKE/Desktop/xmlCheck"
+  val dst = "C:/Users/Julian.SUNFLYKARAOKE/Desktop/fileOutput"     
+  val myParser = new Streamliner(src, dst)
+  myParser.processDirectory 
   myParser.convertedTracksToFile
-  
-  
-  
+    
   val broken = myParser.getBrokenTracks
-  println(broken.length)
-  broken.foreach { x => println(x.getFileName) }
+  val brokenFiles = broken.foldLeft(new StringBuffer)( (sb, s) => sb.append(s.getFileName + "\n"))
+  println(brokenFiles)
+  
+  myParser.writeToFile(dst + "/" + "brokenTrack.txt", brokenFiles.toString())
    
 }

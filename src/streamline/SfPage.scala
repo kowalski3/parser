@@ -19,7 +19,7 @@ class BasicPage ( val pageType: String,
  
   def pageValues:String = {
     //println("Start time " + startTime.length())
-    "***********************************" + "\n" +
+    "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" +
     "PageType: " + pageType +  "\n" +
     "StartTime: " + startTime + " \n" + 
     "EntTime: " + endTime + " \n"
@@ -27,6 +27,7 @@ class BasicPage ( val pageType: String,
 }
 
 
+ 
 
 //THIS IS INSTRUCTION PAGE
 class InstructionPage  ( pageType: String,
@@ -48,20 +49,41 @@ class InstructionPage  ( pageType: String,
 //LYRIC PAGE
 class LyricPage  (  pageType: String,
                     startTime: String,
-                    endTime: String,                    
-                    lines: List[Line]) extends InstructionPage (pageType,startTime,endTime,lines)   {
+                    endTime: String,
+                    lines: List[Line],
+                    val pageIndexBug: Boolean) extends InstructionPage (pageType,startTime,endTime,lines)   {
   
-  override def pageValues:String = {
-     super.pageValues  + " \n" +
-     lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLines}.toString()
+  
 
+  override def pageValues:String = {
+    if(pageIndexBug){
+      return super.pageValues  + " \n" +
+      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLines}.toString()
+    } else {
+      return "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" + 
+      "!!!!!!!!! THIS LYRIC PAGE CONTAINS ERRORS !!!!!!!!!\n" +
+      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLinesBrokenTrack}.toString()
+    } 
   }
   
   
- /**
+
+}
+
+object LyricPage {
+  
+  def apply(pageType: String, startTime: String,  endTime: String,lines: List[Line]):LyricPage = {
+    val pageIndexBug: Boolean = pageLineIndexesOk(lines) match {
+     case Some(true) => true
+     case Some (false) => false
+  }
+    new LyricPage(pageType, startTime, endTime, lines, pageIndexBug) 
+  }
+    
+  /**
   * Compares character indexes in XML with index of words in lyric 
   */
-  def pageLineIndexesOk: Option[Boolean] = {
+  def pageLineIndexesOk(lines: List[Line]): Option[Boolean] = {
     var flag = Option(true) 
     lines.foreach { lines =>  
       lines match{
@@ -70,7 +92,6 @@ class LyricPage  (  pageType: String,
       } 
     }
     flag
-  }  
-  
+  }                      
+                    
 }
-

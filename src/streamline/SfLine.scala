@@ -14,7 +14,10 @@ trait Line { def getLines:String }
 /**
  * Static Page super class 
  */
-class StaticPageLine (val lineText: String) extends Line   { def getLines = lineText }
+class StaticPageLine (val lineText: String,
+                      val voice: String) extends Line   { 
+  def getLines = "Voice: " + voice + "\n" + lineText 
+  }
 
 
 
@@ -23,12 +26,13 @@ class StaticPageLine (val lineText: String) extends Line   { def getLines = line
  * Lyric page sub class
  */
 
-class LyricPageLine (lineText:String) extends StaticPageLine (lineText){ 
+class LyricPageLine (lineText: String,
+                     voice: String) extends StaticPageLine (lineText,voice){ 
   val characters: ListBuffer[Character] = ListBuffer()
   
 
-  def this(lineText:String, highlights:Node) = {
-    this(lineText)
+  def this(lineText:String, voice:String, highlights:Node) = {
+    this(lineText,voice)
     (highlights \\ "Highlight").foreach { Highlight => characters += Character.createFromNode(Highlight) }
   }
   
@@ -38,17 +42,20 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
  
  
   override def getLines = {
-    "\n>>>>>>>NEW LINE>>>>>>>\n\n  "+
+    "\n>>>>>>>NEW LINE>>>>>>>\n\n" +
     super.getLines + "\n\n" +
-    "LINE OK? " + indexMatch + "\n" + 
-    //addTimesToWords + "\n" 
-    //DEBUG
-    getIndexFromCharacters.toString() +"\n"+
-    //getTimeFromCharacters.toString() +"\n"+
-    getLineIndexesAsList(lineText).toString() //+ 
-    //characters.foldLeft(new StringBuffer()){ (sb, s) => sb append s.getCharHighlightVal}.toString() 
+    addTimesToWords + "\n"
   }
   
+  def getLinesBrokenTrack = {
+    "\n>>>>>>>NEW LINE>>>>>>>\n\n"+
+    super.getLines + "\n\n" +
+    "LINE OK? " + indexMatch + "\n" + 
+    lineText + "\n"+
+    //addTimesToWords + "\n" + 
+    getIndexFromCharacters.toString() +"\n"+
+    getLineIndexesAsList(lineText).toString() + "\n\n"
+  }
   
   /**
    * Checks if character indexes in XML match the index created from the lyric line.
@@ -56,15 +63,10 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
   //NEED REFACTORING PRETTY COMPLICATED!
   def addTimesToWords: String = {
     val words = lineText.split(" ")
-    
     val wordsAndTime = words zip getTimeFromCharacters
-    
-    val x = wordsAndTime.foldLeft(new StringBuffer()) { (sb,s) => sb.append(s._1 + "\n" + 
-                                                                            " Start: " + s._2(0) + "\n" + 
-                                                                            " End: " +  s._2(1) + "\n\n") }
-    
-    
-    x.toString()
+    wordsAndTime.foldLeft(new StringBuffer()) { (sb,s) => sb.append(s._1 + "\n" + 
+                                                                    " Start: " + s._2(0) + "\n" + 
+                                                                    " End: " +  s._2(1) + "\n\n") }.toString()
   }
   
   
@@ -84,8 +86,7 @@ class LyricPageLine (lineText:String) extends StaticPageLine (lineText){
 
   /**
    * Line indexes methods
-   */
-  
+   */  
   def indexMatch: Boolean = {
     getIndexFromCharacters == getLineIndexesAsList(lineText)
   }
