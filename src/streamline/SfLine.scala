@@ -16,7 +16,7 @@ trait Line { def getLines:String }
  */
 class StaticPageLine (val lineText: String,
                       val voice: String) extends Line   { 
-  def getLines = "Voice: " + voice + "\n" + lineText 
+  def getLines = "Voice: " + voice + "\nLine: " + lineText 
   }
 
 
@@ -64,9 +64,10 @@ class LyricPageLine (lineText: String,
   def addTimesToWords: String = {
     val words = lineText.split(" ")
     val wordsAndTime = words zip getTimeFromCharacters
-    wordsAndTime.foldLeft(new StringBuffer()) { (sb,s) => sb.append(s._1 + "\n" + 
-                                                                    " Start: " + s._2(0) + "\n" + 
-                                                                    " End: " +  s._2(1) + "\n\n") }.toString()
+    wordsAndTime.foldLeft(new StringBuffer()) { (sb,s) => sb.append(
+                                                                    "[" + s._2(0) + "] " +
+                                                                      s._1 + "" + 
+                                                                    " [" +  s._2(1) + "]\n") }.toString()
   }
   
   

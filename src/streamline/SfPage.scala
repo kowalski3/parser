@@ -21,10 +21,22 @@ class BasicPage ( val pageType: String,
     //println("Start time " + startTime.length())
     "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" +
     "PageType: " + pageType +  "\n" +
-    "StartTime: " + startTime + " \n" + 
-    "EntTime: " + endTime + " \n"
+    "StartTime: " + roundTime(startTime) + " \n" + 
+    "EndTime: " + roundTime(endTime) + " \n"
   } 
+  
+  
+  def roundTime(time:String):String = {
+  
+  val x = Math.round(time.toDouble *100.0)/100.0
+  x.toString()
+  
 }
+  
+  
+}
+
+
 
 
  
@@ -36,7 +48,7 @@ class InstructionPage  ( pageType: String,
                          val lines: List[Line]) extends BasicPage(pageType,startTime,endTime)   {
    
   override def pageValues:String = {
-     super.pageValues  + " \n" +
+     return super.pageValues  + " \n" +
      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.getLines + "\n"}
   }
    

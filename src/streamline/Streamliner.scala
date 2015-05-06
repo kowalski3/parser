@@ -142,7 +142,7 @@ class Streamliner(srcDirectoryName:String,
    val instructionLines: ListBuffer[Line] = ListBuffer()
    
     (pageNode \\ "Line").foreach { Line =>  val voice =  (Line \\ "Voice").text
-        (Line \\ "Text").foreach  { Text => instructionLines += new StaticPageLine(voice, Text.text) }
+        (Line \\ "Text").foreach  { Text => instructionLines += new StaticPageLine(Text.text, voice) }
      }
    
    (startTime,endTime,instructionLines.toList) 
