@@ -21,9 +21,10 @@ class Streamliner(srcDirectoryName:String,
  def processDirectory = {   
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
      val key = file.getName.substring(0,file.getName.indexOf(" "))
+     println("processing: " + key.toString())
      val value = parsePages(file.toString(), file.getPath)
      trackMap.put(key, value)
-     println("processed: " + key.toString())
+     println("processed:  " + key.toString() +"\n")
   }   
   
  }
@@ -57,7 +58,7 @@ class Streamliner(srcDirectoryName:String,
    
    for ((key, value) <- trackMap){  
      var fileName = ""
-     
+     println(key + " being written to file")
      value.trackOk match {
        case Some(true) => fileName = key + ".txt"
        case Some(false) =>  fileName = "ERROR_" + key + ".txt"
