@@ -5,7 +5,7 @@ import scala.collection.mutable.ListBuffer
 
 class Track(fileName:String, pageList: List[SfPage]){
   
-  
+  //TO DO CHECK THIS IS WORKING OK, SEEMS BUGGY
   def trackOk: Option[Boolean] = {
     var pagesok = Option(true)
       
@@ -13,15 +13,15 @@ class Track(fileName:String, pageList: List[SfPage]){
        page match {  
          case page: LyricPage => val pageOk =  (LyricPage.pageLineIndexesOk(page.lines)) 
                                  pageOk match {
-                                    case Some(false) => return Option(false)
-                                    case Some(true) => return Option(true)
+                                    case Some(false) => pagesok = Option(false)
+                                    case Some(true) => 
                                     //THROW EXCEPTION HERE?
-                                    case None => return None
+                                    case None => 
                                   }                                                                                 
          case _                => None           
       }
     }
-    None
+    pagesok
   }
   
   

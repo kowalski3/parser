@@ -69,6 +69,7 @@ class LyricPage  (  pageType: String,
 
   override def pageValues:String = {
     if(pageIndexBug){
+      
       return super.pageValues  + " \n" +
       lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLines}.toString()
     } else {
@@ -103,6 +104,7 @@ object LyricPage {
         case _ => return None  
       } 
     }
+   // println(flag)
     flag
   }                      
                     
