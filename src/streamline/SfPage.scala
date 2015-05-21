@@ -8,7 +8,7 @@ trait SfPage {
   
  
 
-
+//TO REFACTOR SEE COMMENTS BELOW. In "Lyric Page"
 
 //TITLE PAGE
 class BasicPage ( val pageType: String,
@@ -66,11 +66,21 @@ class LyricPage  (  pageType: String,
                     val pageIndexBug: Boolean) extends InstructionPage (pageType,startTime,endTime,lines)   {
   
   
-
+//CODE SMELL . This has been here as call to super.pagevalues was causing problems. due to duplicated lines.foldleft.... methods
+  def pageTimesLyric:String = {
+    //println("Start time " + startTime.length())
+    "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" +
+    "PageType: " + pageType +  "\n" +
+    "StartTime: " + roundTime(startTime) + " \n" + 
+    "EndTime: " + roundTime(endTime) + " \n"
+  } 
+  
+  
+  
   override def pageValues:String = {
     if(pageIndexBug){
       
-      return super.pageValues  + " \n" +
+      return pageTimesLyric + " \n" +
       lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LyricPageLine].getLines}.toString()
     } else {
       return "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" + 

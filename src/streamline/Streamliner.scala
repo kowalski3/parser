@@ -173,8 +173,8 @@ class Streamliner(srcDirectoryName:String,
 
 object Test extends App {
   
-  val src = "C:/Users/Julian.SUNFLYKARAOKE/Desktop/xmlCheck"
-  val dst = "C:/Users/Julian.SUNFLYKARAOKE/Desktop/fileOutput"     
+  val src = "C:/Julian/in"
+  val dst = "C:/Julian/out"     
   val myParser = new Streamliner(src, dst)
   myParser.processDirectory 
   myParser.convertedTracksToFile
