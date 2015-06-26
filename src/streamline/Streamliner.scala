@@ -28,6 +28,22 @@ class Streamliner(srcDirectoryName:String,
   }   
   
  }
+ 
+ 
+  def validateFiles():String  = {
+   var errors = ""
+   for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
+      try{
+       println(file.getName)
+        scala.xml.XML.loadFile(file.getPath) 
+      } catch {
+        case a: SAXParseException => errors += file.getName + " ---> SAXParseException"
+        case b: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException => errors += file.getName + " ---> MalformedByteSequenceException"
+      }
+   }
+    errors   
+ }
+ 
   
  /**
   * Checks if indexes of characters in XML match the spacing of the lines in each lyric line
@@ -74,6 +90,9 @@ class Streamliner(srcDirectoryName:String,
  }
   
 
+
+ 
+ 
  
  def writeToFile(path: String, txt: String): Unit = {
      val pw = new PrintWriter(new File(path ))
@@ -83,13 +102,20 @@ class Streamliner(srcDirectoryName:String,
  
   
  
- def parsePages(absfileName: String, relFileName:String):Track = { 
+ def parsePages(absfileName: String, relativeFileName:String):Track = { 
    val file = scala.xml.XML.loadFile(absfileName)
    
    val pageList = (file \\ "Page").foldLeft(List[SfPage]()) { (pages, pageNode) => 
       pages :+ parsePage(pageNode)
-   }  
-   new Track(relFileName,pageList)
+   } 
+   
+   val artist = (file \\ "Artist").text
+   val title = (file \\ "Title").text
+   val copyright = (file \\ "Copyright").text
+   val writers = (file \\ "Writers").text
+   
+   new Track(relativeFileName, artist, title, copyright, writers, pageList)
+   
  }
 
 
@@ -173,9 +199,16 @@ class Streamliner(srcDirectoryName:String,
 
 object Test extends App {
   
-  val src = "C:/Julian/in"
-  val dst = "C:/Julian/out"     
+  val src = "C:/Julian/Streamliner/in"
+  val dst = "C:/Julian/Streamliner/out"
   val myParser = new Streamliner(src, dst)
+  
+  //error checking
+//  val xmlErrors = myParser.validateFiles
+//  myParser.writeToFile(dst + "/" + "xmlErrors.txt", xmlErrors)
+  
+  //end of error checking
+  
   myParser.processDirectory 
   myParser.convertedTracksToFile
     

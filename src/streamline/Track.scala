@@ -3,7 +3,12 @@ package streamline
 import scala.collection.mutable.ListBuffer
 
 
-class Track(fileName:String, pageList: List[SfPage]){
+class Track(fileName:String,
+            artist: String,
+            title: String,
+            copyright: String,
+            writers:String,
+            pageList: List[SfPage]){
   
   //TO DO CHECK THIS IS WORKING OK, SEEMS BUGGY
   def trackOk: Option[Boolean] = {
@@ -26,19 +31,16 @@ class Track(fileName:String, pageList: List[SfPage]){
   
   
   def getTrackData: String = {
-    fileName + "\n" + pageList.foldLeft(new StringBuffer()){ (sb, s) => sb append s.pageValues}.toString()
+   "********************TRACK INFO********************" +
+    "\n" + "Artist: " + artist + 
+    "\n" + "Title: " + title +
+    "\n" + "Copyright: " + copyright +
+    "\n" + "Writers: " + writers + 
+    "\n" + pageList.foldLeft(new StringBuffer()){ (sb, s) => sb append s.pageValues}.toString()
   }
   
   
   
   def getFileName:String = fileName
   
-}
-  
-
-
-
-object Track{
-  def apply(fileName:String, pageList: List[SfPage]):Track =
-     new Track(fileName,pageList)
 }
