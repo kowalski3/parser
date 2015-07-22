@@ -1,6 +1,7 @@
-package streamline
+package main.model
 import scala.xml._
 import scala.collection.mutable.ListBuffer
+
 
 
 /**

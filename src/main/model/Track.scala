@@ -1,6 +1,4 @@
-package streamline
-
-import scala.collection.mutable.ListBuffer
+package main.model
 
 
 class Track(fileName:String,

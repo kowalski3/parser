@@ -1,15 +1,17 @@
-package streamline
+package main.controller
+import main.model._
 
 import scala.xml._
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions._
 import java.io._
-import scala.io._
+
+
 /*
  * https://bcomposes.wordpress.com/2012/05/04/basic-xml-processing-with-scala/
  */
 
-class Streamliner(srcDirectoryName:String,
+class ParserController(srcDirectoryName:String,
                   destDirectoryName:String) {
 
  val trackMap = scala.collection.mutable.Map[String,Track]()
@@ -191,31 +193,4 @@ class Streamliner(srcDirectoryName:String,
   } 
  
  
-}
-
-
-
-
-
-object Test extends App {
-  
-  val src = "C:/Julian/Streamliner/in"
-  val dst = "C:/Julian/Streamliner/out"
-  val myParser = new Streamliner(src, dst)
-  
-  //error checking
-//  val xmlErrors = myParser.validateFiles
-//  myParser.writeToFile(dst + "/" + "xmlErrors.txt", xmlErrors)
-  
-  //end of error checking
-  
-  myParser.processDirectory 
-  myParser.convertedTracksToFile
-    
-  val broken = myParser.getBrokenTracks
-  val brokenFiles = broken.foldLeft(new StringBuffer)( (sb, s) => sb.append(s.getFileName + "\n"))
-  println(brokenFiles)
-  
-  myParser.writeToFile(dst + "/" + "brokenTrack.txt", brokenFiles.toString())
-   
 }

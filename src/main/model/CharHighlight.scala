@@ -1,4 +1,4 @@
-package streamline
+package main.model
 
 import scala.xml._
 
