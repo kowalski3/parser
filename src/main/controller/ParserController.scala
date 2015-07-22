@@ -127,29 +127,26 @@ class ParserController(srcDirectoryName:String,
    
      pageType match{
       case "Title"       =>  val titleValues = getTitleValues(node)
-                             return new BasicPage(pageType,
-                                                  titleValues._1,
-                                                  titleValues._2
+                             return new BasicPage(pageType,        //pageType
+                                                  titleValues._1,  //start time
+                                                  titleValues._2   //end time
                                                   )
                              
       case "Instruction" =>  val instructionPageValues = getInstructionValues(node)
-                             return new InstructionPage( pageType, 
-                                                         instructionPageValues._1,
-                                                         instructionPageValues._2,
-                                                         instructionPageValues._3)
+                             return new InstructionPage( pageType,                 // pageType
+                                                         instructionPageValues._1, // start time
+                                                         instructionPageValues._2, // end time
+                                                         instructionPageValues._3) // lyric list
       
       case "Lyrics"      =>  val lyricPageValues = getLyricValues(node);
-                             return                    LyricPage( pageType,
-                                                       lyricPageValues._1,
-                                                       lyricPageValues._2,
-                                                       lyricPageValues._3)
+                             return LyricPage( pageType,           // pageType
+                                               lyricPageValues._1, // start time
+                                               lyricPageValues._2, // end time
+                                               lyricPageValues._3) // lyrics list
       case _ => println("Dont recognise this type") 
     }
-    
     //HANDLE THIS BETTER DONT RETURN NULL
-    return null
-  
-    
+    return null    
   }
 
   
