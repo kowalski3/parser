@@ -6,7 +6,7 @@ class Track(fileName:String,
             title: String,
             copyright: String,
             writers:String,
-            pageList: List[SfPage]){
+            pageList: List[Page]){
   
   //TO DO CHECK THIS IS WORKING OK, SEEMS BUGGY
   def trackOk: Option[Boolean] = {
@@ -14,7 +14,7 @@ class Track(fileName:String,
       
     pageList.foreach { page => 
        page match {  
-         case page: LyricPage => val pageOk =  (LyricPage.pageLineIndexesOk(page.lines)) 
+         case page: PageLyric => val pageOk =  (PageLyric.pageLineIndexesOk(page.lines)) 
                                  pageOk match {
                                     case Some(false) => pagesok = Option(false)
                                     case Some(true) => 

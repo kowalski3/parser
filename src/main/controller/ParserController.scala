@@ -107,7 +107,7 @@ class ParserController(srcDirectoryName:String,
  def parsePages(absfileName: String, relativeFileName:String):Track = { 
    val file = scala.xml.XML.loadFile(absfileName)
    
-   val pageList = (file \\ "Page").foldLeft(List[SfPage]()) { (pages, pageNode) => 
+   val pageList = (file \\ "Page").foldLeft(List[Page]()) { (pages, pageNode) => 
       pages :+ parsePage(pageNode)
    } 
    
@@ -122,24 +122,24 @@ class ParserController(srcDirectoryName:String,
 
 
  
-  def parsePage(node: Node):SfPage = {
+  def parsePage(node: Node):Page = {
     val pageType = (node \ "Type").text
    
      pageType match{
       case "Title"       =>  val titleValues = getTitleValues(node)
-                             return new BasicPage(pageType,        //pageType
+                             return new PageBasic(pageType,        //pageType
                                                   titleValues._1,  //start time
                                                   titleValues._2   //end time
                                                   )
                              
       case "Instruction" =>  val instructionPageValues = getInstructionValues(node)
-                             return new InstructionPage( pageType,                 // pageType
+                             return new PageInstruction( pageType,                 // pageType
                                                          instructionPageValues._1, // start time
                                                          instructionPageValues._2, // end time
                                                          instructionPageValues._3) // lyric list
       
       case "Lyrics"      =>  val lyricPageValues = getLyricValues(node);
-                             return LyricPage( pageType,           // pageType
+                             return PageLyric( pageType,           // pageType
                                                lyricPageValues._1, // start time
                                                lyricPageValues._2, // end time
                                                lyricPageValues._3) // lyrics list
@@ -183,7 +183,7 @@ class ParserController(srcDirectoryName:String,
     
    (pageNode \\ "Line").foreach { Line => val voice =  (Line \\ "Voice").text
                                           val lyric =  (Line \\ "Text").text
-     (Line \\"Highlights").foreach { Highlights => lyricLines += new LyricPageLine(lyric,voice,Highlights) }     
+     (Line \\"Highlights").foreach { Highlights => lyricLines += new LineLyricPage(lyric,voice,Highlights) }     
      }
              
     (startTime,endTime,lyricLines.toList) 

@@ -6,8 +6,8 @@ import main.controller._
  */
 object ParserRunner extends App {
   
-  val src = "C:/Julian/Streamliner/in"
-  val dst = "C:/Julian/Streamliner/out"
+  val src = "C:/Julian/output/Streamliner/in"
+  val dst = "C:/Julian/output/Streamliner/out"
   val myParser = new ParserController(src, dst)
   
   //error checking
