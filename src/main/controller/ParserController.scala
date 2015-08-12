@@ -168,7 +168,7 @@ class ParserController(srcDirectoryName:String,
    val instructionLines: ListBuffer[Line] = ListBuffer()
    
     (pageNode \\ "Line").foreach { Line =>  val voice =  (Line \\ "Voice").text
-        (Line \\ "Text").foreach  { Text => instructionLines += new StaticPageLine(Text.text, voice) }
+        (Line \\ "Text").foreach  { Text => instructionLines += new LineStaticPage(Text.text, voice) }
      }
    
    (startTime,endTime,instructionLines.toList) 

@@ -24,15 +24,30 @@ class PageLyric  (  pageType: String,
   
   
   
-  override def pageValues:String = {
+//  override def pageValues:String = {
+//    if(pageIndexBug){
+//      
+//      return pageTimesLyric + " \n" +
+//      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLines}.toString()
+//    } else {
+////CHANGE HERE  
+//      return "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" + 
+//      "!!!!!!!!! THIS LYRIC PAGE CONTAINS ERRORS !!!!!!!!!\n" +
+//      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLinesBrokenTrack}.toString()
+////END CHANGE
+//    } 
+//  }
+  
+   override def pageValues:String = {
     if(pageIndexBug){
       
       return pageTimesLyric + " \n" +
       lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLines}.toString()
-    } else {
+    } else { //if indexing problem exists
+      
       return "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" + 
       "!!!!!!!!! THIS LYRIC PAGE CONTAINS ERRORS !!!!!!!!!\n" +
-      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLinesBrokenTrack}.toString()
+      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getFixedLines}.toString()
     } 
   }
   
