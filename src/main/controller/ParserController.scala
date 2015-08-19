@@ -79,7 +79,8 @@ class ParserController(srcDirectoryName:String,
      println(key + " being written to file")
      value.trackOk match {
        case Some(true) => fileName = key + ".txt"
-       case Some(false) =>  fileName = "ERROR_" + key + ".txt"
+       //case Some(false) =>  fileName = "ERROR_" + key + ".txt"
+       case Some(false) =>  fileName = key + ".txt"
        case None => //throw exception
      }
           

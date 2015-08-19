@@ -1,6 +1,9 @@
 package main.model
 import scala.xml._
 import scala.collection.mutable.ListBuffer
+
+import scala.collection.JavaConversions._
+import java.io._
 //TO REFACTOR SEE COMMENTS BELOW. 
 /**
  * @author julian
@@ -8,6 +11,8 @@ import scala.collection.mutable.ListBuffer
 class LineLyricPage (lineText: String,
                      voice: String) extends LineStaticPage (lineText,voice){ 
   val characters: ListBuffer[Character] = ListBuffer()
+  
+  val errorFile = new File("C:Julian/output/Streamliner/out/outofBounds.txt")
   
   /*-----------------------------------------------------------------
    * Constructor
@@ -31,12 +36,25 @@ class LineLyricPage (lineText: String,
   }
   
    def getFixedLines = {
+    try{
      "\n>>>>>>>NEW LINE>>>>>>>\n\n" +
     super.getLines + "\n\n" +
     addTimesToWordFix + "\n"
- 
+    } catch {
+      case e: IndexOutOfBoundsException => "*REMOVE*"
+      //case x: 
+    }
   }
   
+   
+    def writeToFile(txt: String): Unit = {
+     val pw = new PrintWriter(errorFile)
+     pw.write(txt)
+     pw.close   
+    }
+ 
+   
+   
   
  /**
    * Returns the debug output for lines with broken indices

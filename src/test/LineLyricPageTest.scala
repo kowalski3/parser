@@ -35,7 +35,7 @@ class LineLyricPageTest extends FlatSpec with Matchers with BeforeAndAfter {
 //    println(testClass.getIndexFromCharacters)
 ////   println(testClass.getTimePlusChar)
     println(testClass.getLines)
-   println(testClass.getFixedLines)
+    println(testClass.getFixedLines)
 
     
   } 

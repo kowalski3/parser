@@ -45,8 +45,7 @@ class PageLyric  (  pageType: String,
       lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLines}.toString()
     } else { //if indexing problem exists
       
-      return "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" + 
-      "!!!!!!!!! THIS LYRIC PAGE CONTAINS ERRORS !!!!!!!!!\n" +
+      return pageTimesLyric + " \n" +
       lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getFixedLines}.toString()
     } 
   }
