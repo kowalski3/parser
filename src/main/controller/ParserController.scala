@@ -1,11 +1,12 @@
 package main.controller
+
 import main.model._
 
 import scala.xml._
 import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions._
 import java.io._
-
+import main.view.ParserUI
 
 /*
  * https://bcomposes.wordpress.com/2012/05/04/basic-xml-processing-with-scala/
@@ -17,16 +18,24 @@ class ParserController(srcDirectoryName:String,
  val trackMap = scala.collection.mutable.Map[String,Track]()
  val sourceDirectory = new File(srcDirectoryName)
  val destDirectory = new File(destDirectoryName)
-
+ var view: ParserUI = null
+ 
+ 
+ def this(srcDirectoryName:String, destDirectoryName:String, view: ParserUI){
+   this(srcDirectoryName, destDirectoryName)
+   this.view = view
+ }
  
  //TO DO - make part of constructor
  def processDirectory = {   
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
      val key = file.getName.substring(0,file.getName.indexOf(" "))
-     println("processing: " + key.toString())
+     this.view.setTheText("processing: " + key.toString())
+     //println("processing: " + key.toString())
      val value = parsePages(file.toString(), file.getPath)
      trackMap.put(key, value)
-     println("processed:  " + key.toString() +"\n")
+     this.view.setTheText("processed:  " + key.toString() +"\n")
+     //println("processed:  " + key.toString() +"\n")
   }   
   
  }
