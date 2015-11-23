@@ -30,6 +30,7 @@ class ParserController(srcDirectoryName:String,
  def processDirectory = {   
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
      val key = file.getName.substring(0,file.getName.indexOf(" "))
+     println(key)
      this.view.setTheText("processing: " + key.toString())
      //println("processing: " + key.toString())
      val value = parsePages(file.toString(), file.getPath)

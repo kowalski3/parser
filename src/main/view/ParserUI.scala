@@ -29,9 +29,15 @@ class ParserUI extends PApplet{
   
   var myTextarea: Textarea = null
  
+  
+  
+  override def settings(){
+    size(300,450) 
+  }
+  
   override def setup(){
     
-    size(300,450) 
+    
     cp5 = new ControlP5(this);
     var font: PFont = createFont("arial",20);
     textFont(font);
@@ -100,7 +106,7 @@ class ParserUI extends PApplet{
           controller = new ParserController(inDir, outDir, this)
         }
         controller.processDirectory
-        controller.convertedTracksToFile
+        //controller.convertedTracksToFile
       
         val broken = controller.getBrokenTracks
         val brokenFiles = broken.foldLeft(new StringBuffer)( (sb, s) => sb.append(s.getFileName + "\n"))
