@@ -7,6 +7,7 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.JavaConversions._
 import java.io._
 import main.view.ParserUI
+import java.lang.reflect.InvocationTargetException;
 
 /*
  * https://bcomposes.wordpress.com/2012/05/04/basic-xml-processing-with-scala/
@@ -29,14 +30,18 @@ class ParserController(srcDirectoryName:String,
  //TO DO - make part of constructor
  def processDirectory = {   
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
-     val key = file.getName.substring(0,file.getName.indexOf(" "))
-     println(key)
-     this.view.setTheText("processing: " + key.toString())
-     //println("processing: " + key.toString())
-     val value = parsePages(file.toString(), file.getPath)
-     trackMap.put(key, value)
-     this.view.setTheText("processed:  " + key.toString() +"\n")
-     //println("processed:  " + key.toString() +"\n")
+     
+    // try{
+       val key = file.getName.substring(0,file.getName.indexOf(" "))
+       println(key)
+       this.view.setTheText("processing: " + key.toString())
+       //println("processing: " + key.toString())
+       val value = parsePages(file.toString(), file.getPath)
+       trackMap.put(key, value)
+       this.view.setTheText("processed:  " + key.toString() +"\n")
+       
+       //println("processed:  " + key.toString() +"\n")
+     
   }   
   
  }
@@ -46,13 +51,14 @@ class ParserController(srcDirectoryName:String,
    var errors = ""
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
       try{
-       println(file.getName)
+       //println(file.getName)
         scala.xml.XML.loadFile(file.getPath) 
       } catch {
         case a: SAXParseException => errors += file.getName + " ---> SAXParseException"
         case b: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException => errors += file.getName + " ---> MalformedByteSequenceException"
       }
    }
+   
     errors   
  }
  
@@ -116,8 +122,9 @@ class ParserController(srcDirectoryName:String,
   
  
  def parsePages(absfileName: String, relativeFileName:String):Track = { 
-   val file = scala.xml.XML.loadFile(absfileName)
    
+   val file = scala.xml.XML.loadFile(absfileName)
+  
    val pageList = (file \\ "Page").foldLeft(List[Page]()) { (pages, pageNode) => 
       pages :+ parsePage(pageNode)
    } 
@@ -128,6 +135,8 @@ class ParserController(srcDirectoryName:String,
    val writers = (file \\ "Writers").text
    
    new Track(relativeFileName, artist, title, copyright, writers, pageList)
+   
+   
    
  }
 

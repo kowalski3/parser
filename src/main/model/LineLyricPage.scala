@@ -14,11 +14,20 @@ class LineLyricPage (lineText: String,
   
   val errorFile = new File("C:Julian/output/Streamliner/out/outofBounds.txt")
   
+  
+   //REGEXS (need better validation method)
+   //TO DO - Need better method to deal with validation 
+    val questionMarkPattern = "[a-z][^a-zA-Z '][a-z]+".r 
+  
   /*-----------------------------------------------------------------
    * Constructor
    *-----------------------------------------------------------------*/
   def this(lineText:String, voice:String, highlights:Node) = {
-    this(lineText,voice)
+   this(lineText,voice)
+   val x = questionMarkPattern.findFirstIn(lineText).size
+   if(x > 0) println(lineText)
+   
+  
     (highlights \\ "Highlight").foreach { Highlight => characters += Character.createFromNode(Highlight) }
   }
   

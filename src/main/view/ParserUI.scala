@@ -35,14 +35,11 @@ class ParserUI extends PApplet{
     size(300,450) 
   }
   
-  override def setup(){
-    
-    
+  override def setup(){ 
     cp5 = new ControlP5(this);
     var font: PFont = createFont("arial",20);
     textFont(font);
-    
-    
+        
     cp5.addButton("in")
     .setBroadcast(false)  
     .setValue(100)
@@ -105,17 +102,18 @@ class ParserUI extends PApplet{
         if(controller == null){
           controller = new ParserController(inDir, outDir, this)
         }
+             
+//        controller.writeToFile(outDir + "/" + "validation.txt", controller.validateFiles())
+        
         controller.processDirectory
-        //controller.convertedTracksToFile
+        controller.convertedTracksToFile
       
         val broken = controller.getBrokenTracks
         val brokenFiles = broken.foldLeft(new StringBuffer)( (sb, s) => sb.append(s.getFileName + "\n"))
         println(brokenFiles)
     
        controller.writeToFile(outDir + "/" + "brokenTrack.txt", brokenFiles.toString())
-       
-      
-      
+             
     } else {
       myTextarea.setText("Error, set input and output");  
     }
