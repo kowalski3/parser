@@ -2,6 +2,9 @@ package main.model
 
 /**
  * @author julian
+ * Basic karaoke page, inherits from page trait.
+ * Contains page type, start time and end time fields common to all other
+ * concrete page instances
  */
 
 

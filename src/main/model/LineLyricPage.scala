@@ -4,8 +4,8 @@ import scala.collection.mutable.ListBuffer
 
 import scala.collection.JavaConversions._
 import java.io._
-//TO REFACTOR SEE COMMENTS BELOW. 
-/**
+
+/*
  * @author julian
  */
 class LineLyricPage (lineText: String,
@@ -98,10 +98,6 @@ class LineLyricPage (lineText: String,
                                                           }.toString()
 }
   
-  
-  
-  
-
   /*-----------------------------------------------------------------------
    * Line and character index methods
    *-----------------------------------------------------------------------*/  

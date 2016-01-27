@@ -7,16 +7,19 @@ import controlP5.Textarea
 import main.controller.ParserController
 
 /**
+ * View class for application
  * @author julian
  */
 class ParserUI extends PApplet{
-  //Improve this so not null start.  Have to initialise by setup() but also can't be left
-  // unitialised else class
   
+  //Controller reference links to this view class
   var controller: ParserController = null
   
+  // Processing-related fields
   var cp5: ControlP5 = null
+  var myTextarea: Textarea = null
   
+  // Fields controlling directory configuration
   var inDir: String = ""
   var inSet: Boolean = false
   var inSetTemp: Boolean = false
@@ -27,14 +30,14 @@ class ParserUI extends PApplet{
   
   var running = false;
   
-  var myTextarea: Textarea = null
+  
  
   
-  
+  // Processing settings run at construction
   override def settings(){
     size(300,450) 
   }
-  
+  //Processing settings run at construction
   override def setup(){ 
     cp5 = new ControlP5(this);
     var font: PFont = createFont("arial",20);
@@ -71,12 +74,17 @@ class ParserUI extends PApplet{
       .setColorForeground(color(255,100));
   }
   
+  //Processing draw loop runs in a cycle
   override def draw(){
     background(0);
      fill(255);
-    
   }
   
+  
+  /*
+   * Buttons 
+   * Select input directory
+   */
   
   def in {
       if( ! inSet) {
@@ -86,7 +94,11 @@ class ParserUI extends PApplet{
         myTextarea.setText("Input directory is already set");
       }
   }
- 
+  
+  /*
+   * Buttons 
+   * Select output directory
+   */
   def out {
     if( ! outSet) {
         outSetTemp = true
@@ -96,18 +108,23 @@ class ParserUI extends PApplet{
       }
   }
   
+  
+  /*
+   * Buttons 
+   * Convert tracks
+   */
    def convert {
     if(inSet && outSet && !running) {
       running = true
         if(controller == null){
           controller = new ParserController(inDir, outDir, this)
         }
-             
-//        controller.writeToFile(outDir + "/" + "validation.txt", controller.validateFiles())
-        
+         
+        //Start conversion process
         controller.processDirectory
         controller.convertedTracksToFile
       
+        //Output broken files
         val broken = controller.getBrokenTracks
         val brokenFiles = broken.foldLeft(new StringBuffer)( (sb, s) => sb.append(s.getFileName + "\n"))
         println(brokenFiles)
@@ -120,10 +137,17 @@ class ParserUI extends PApplet{
     
   }
   
+   /*
+   * Text area 
+   * Update text
+   */
   def setTheText(str:String) {
     myTextarea.setText(myTextarea.getText + "\n" + str)
   }
   
+  /*
+   * Set directory based on user input
+   */
   def selected(selection: File) {
       if (selection == null) {
         myTextarea.setText("Window was closed or the user hit cancel.");
@@ -143,25 +167,5 @@ class ParserUI extends PApplet{
    } 
   
   
-    
-    //      this.initialInputSet = true;
-//      String lines[] = loadStrings(selection.getAbsolutePath());
-//      StringBuffer sb = new StringBuffer();
-//     
-//      // println("there are " + lines.length + " lines");
-//      for (int i = 0 ; i < lines.length; i++) {
-//        sb.append(lines[i]);
-//      }
-//      //removes all white space
-//      String s = sb.toString().replaceAll("\\s+","");
-//
-//      //TO DO - Remove this limit once program memory footprint and speed has been improved
-//      if(s.length() <= 4000){
-//        input(s);  
-//      } else {
-//       
-//      }
-
-      
   
 }

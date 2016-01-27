@@ -1,15 +1,15 @@
 package main.model
 
-/**
- * @author julian
+/*
+ * Lyric Page
+ * Extends Page instruction which inherits from Page Basic 
+ * which inherits from Page trait
  */
-/*--------------------------------------------------------------------
- * LYRIC PAGE
- *--------------------------------------------------------------------*/
+
 class PageLyric  (  pageType: String,
                     startTime: String,
                     endTime: String,
-                    lines: List[Line],
+                    lines: List[Line], // Lyric pages contain a collection of lines.  Composition relationship
                     val pageIndexBug: Boolean) extends PageInstruction (pageType,startTime,endTime,lines)   {
   
   
@@ -22,22 +22,7 @@ class PageLyric  (  pageType: String,
     "EndTime: " + roundTime(endTime) + " \n"
   } 
   
-  
-  
-//  override def pageValues:String = {
-//    if(pageIndexBug){
-//      
-//      return pageTimesLyric + " \n" +
-//      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLines}.toString()
-//    } else {
-////CHANGE HERE  
-//      return "\n\n********************" + pageType.toUpperCase() + "********************" + "\n" + 
-//      "!!!!!!!!! THIS LYRIC PAGE CONTAINS ERRORS !!!!!!!!!\n" +
-//      lines.foldLeft(new StringBuffer()) { (sb, s) => sb append s.asInstanceOf[LineLyricPage].getLinesBrokenTrack}.toString()
-////END CHANGE
-//    } 
-//  }
-  
+ 
    override def pageValues:String = {
     if(pageIndexBug){
       
@@ -77,6 +62,5 @@ object PageLyric {
     }
    // println(flag)
     flag
-  }                      
-                    
+  }                                         
 }

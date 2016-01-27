@@ -10,6 +10,10 @@ import main.view.ParserUI
 import java.lang.reflect.InvocationTargetException;
 
 /*
+ * Controller
+ * Sits between view and model class.
+ * Controls the parsing process.
+ * 
  * https://bcomposes.wordpress.com/2012/05/04/basic-xml-processing-with-scala/
  */
 
@@ -21,46 +25,41 @@ class ParserController(srcDirectoryName:String,
  val destDirectory = new File(destDirectoryName)
  var view: ParserUI = null
  
- 
+ //Contructor
  def this(srcDirectoryName:String, destDirectoryName:String, view: ParserUI){
    this(srcDirectoryName, destDirectoryName)
    this.view = view
  }
  
- //TO DO - make part of constructor
+ //Called from view to trigger conversion process
  def processDirectory = {   
    for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
      
-    // try{
        val key = file.getName.substring(0,file.getName.indexOf(" "))
        println(key)
        this.view.setTheText("processing: " + key.toString())
        //println("processing: " + key.toString())
        val value = parsePages(file.toString(), file.getPath)
        trackMap.put(key, value)
-       this.view.setTheText("processed:  " + key.toString() +"\n")
-       
-       //println("processed:  " + key.toString() +"\n")
-     
+       this.view.setTheText("processed:  " + key.toString() +"\n")   
   }   
-  
  }
  
- 
-  def validateFiles():String  = {
-   var errors = ""
-   for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
-      try{
-       //println(file.getName)
-        scala.xml.XML.loadFile(file.getPath) 
-      } catch {
-        case a: SAXParseException => errors += file.getName + " ---> SAXParseException"
-        case b: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException => errors += file.getName + " ---> MalformedByteSequenceException"
-      }
-   }
-   
-    errors   
- }
+// //Validation
+//  def validateFiles():String  = {
+//   var errors = ""
+//   for(file <- sourceDirectory.listFiles if file.getName endsWith ".xml"){
+//      try{
+//       //println(file.getName)
+//        scala.xml.XML.loadFile(file.getPath) 
+//      } catch {
+//        case a: SAXParseException => errors += file.getName + " ---> SAXParseException"
+//        case b: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException => errors += file.getName + " ---> MalformedByteSequenceException"
+//      }
+//   }
+//   
+//    errors   
+// }
  
   
  /**
@@ -109,10 +108,6 @@ class ParserController(srcDirectoryName:String,
  }
   
 
-
- 
- 
- 
  def writeToFile(path: String, txt: String): Unit = {
      val pw = new PrintWriter(new File(path ))
      pw.write(txt)
@@ -120,7 +115,7 @@ class ParserController(srcDirectoryName:String,
     }
  
   
- 
+ //Start the process of parsing XML files and converting them to the program's representation
  def parsePages(absfileName: String, relativeFileName:String):Track = { 
    
    val file = scala.xml.XML.loadFile(absfileName)
@@ -134,14 +129,11 @@ class ParserController(srcDirectoryName:String,
    val copyright = (file \\ "Copyright").text
    val writers = (file \\ "Writers").text
    
-   new Track(relativeFileName, artist, title, copyright, writers, pageList)
-   
-   
-   
+   new Track(relativeFileName, artist, title, copyright, writers, pageList)  
  }
 
 
- 
+ // Used by parse pages to parse individual page
   def parsePage(node: Node):Page = {
     val pageType = (node \ "Type").text
    
@@ -170,10 +162,7 @@ class ParserController(srcDirectoryName:String,
   }
 
   
-  /**
-   *  GET PAGE VALUES
-   */
-  
+ //Gets all data from a page of type Title
  def getTitleValues(pageNode: Node):(String,String)= {
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text   
@@ -181,7 +170,7 @@ class ParserController(srcDirectoryName:String,
  }
 
  
- 
+ //Gets all data from a page of type Instruction
  def getInstructionValues(pageNode:Node):(String,String,List[Line]) = {
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text  
@@ -195,7 +184,7 @@ class ParserController(srcDirectoryName:String,
  }
  
  
- 
+ //Gets all data from a page of type Lyric
  def getLyricValues(pageNode: Node):(String, String, List[Line])= {
    val startTime = (pageNode \\"StartTime").text
    val endTime = (pageNode \\"EndTime").text

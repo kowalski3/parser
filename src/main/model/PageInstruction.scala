@@ -1,8 +1,9 @@
 package main.model
 
-/*--------------------------------------------------------------------
- * INSTRUCTION PAGE
- *--------------------------------------------------------------------*/
+/*
+ * @author julian
+ * Instruction page, extends Page Basic
+ */
 class PageInstruction  ( pageType: String,
                          startTime: String,
                          endTime: String,

@@ -1,8 +1,4 @@
 package main.model
-
-/**
- * @author julian
- */
 /**
  * Static Page super class 
  */
